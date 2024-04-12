@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation"
 
-export async function create(formData: FormData){
+export async function create(prevState: any, formData: FormData){
     await new Promise( r => setTimeout(r, 5000))
 
     const data = {
@@ -20,6 +20,14 @@ export async function create(formData: FormData){
     }
     const resp = await fetch(process.env.API_BASE_URL + "/categoria", options)
 
-    redirect("/categorias")
+    if (resp.ok){
+        redirect("/categorias")
+    }
+
+    if(resp.status == 400){
+        return {
+            message: "erro de validação"
+        }
+    }
     
 }
