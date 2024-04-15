@@ -1,14 +1,8 @@
-import { Apple, Book, Bus } from 'lucide-react'
+import { icones } from '@/app/utils/Icones'
 
 interface IconeProps {
     nome: string
 }
-
-const icones = [
-    {nome: "apple", icone: <Apple />},
-    {nome: "book", icone: <Book />},
-    {nome: "bus", icone: <Bus />},
-]
 
 export function Icone({nome}: IconeProps){
     return icones.find( icone => icone.nome == nome )?.icone    
