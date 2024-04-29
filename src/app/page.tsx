@@ -1,26 +1,30 @@
 import CardStats from "@/components/Card"
 import MovimentacaoTable from "@/components/MovimentacaoTable";
 import NavBar from "@/components/NavBar"
+import { getMaiorValor, getMenorValor, getUltimas, getUltimoValor } from "./actions/movimentacoes/dashboard";
+import { Card, CardBody, CardHeader } from "@nextui-org/react";
+import { BarChartCategorias } from "@/components/BarChart";
+import { BarChart, Calendar } from "lucide-react";
+import { LineChartMovimentacoes } from "@/components/LineChart";
 
-export default function Home() {
+export default async function Home() {
 
-  // criar um server action para buscar esses dados da API
   const maior = {
     icon: "arrow-up",
     title: "Maior movimentação",
-    value: 99.00
+    value: await getMaiorValor()
   }
 
   const menor = {
     icon: "arrow-down",
     title: "Menor movimentação",
-    value: 10.00
+    value: await getMenorValor()
   }
 
   const ultimo = {
     icon: "calendar",
     title: "Última movimentação",
-    value: 50.00
+    value: await getUltimoValor()
   }
 
   const totais = [
@@ -29,69 +33,7 @@ export default function Home() {
     ultimo
   ]
 
-  // criar um server action para buscar esses dados da API (5 últimas movimentações)
-  const ultimasMovimentacoes: Movimentacao[] = [
-    {
-      id: 1,
-      data: "19/04/2024",
-      descricao: "Compra no mercado",
-      valor: 100.00,
-      tipo: "SAIDA",
-      categoria: {
-        id: 1,
-        nome: "alimentação",
-        icone: "apple"
-      }
-    },
-    {
-      id: 2,
-      data: "18/04/2024",
-      descricao: "Compra de passagem",
-      valor: 25.00,
-      tipo: "SAIDA",
-      categoria: {
-        id: 1,
-        nome: "alimentação",
-        icone: "apple"
-      }
-    },
-    {
-      id: 3,
-      data: "17/04/2024",
-      descricao: "Compra de livro",
-      valor: 50.00,
-      tipo: "SAIDA",
-      categoria: {
-        id: 1,
-        nome: "educação",
-        icone: "book"
-      }
-    },
-    {
-      id: 4,
-      data: "16/04/2024",
-      descricao: "Venda de livro",
-      valor: 20.00,
-      tipo: "ENTRADA",
-      categoria: {
-        id: 1,
-        nome: "educação",
-        icone: "book"
-      }
-    },
-    {
-      id: 5,
-      data: "15/04/2024",
-      descricao: "Venda de livro",
-      valor: 20.00,
-      tipo: "ENTRADA",
-      categoria: {
-        id: 1,
-        nome: "educação",
-        icone: "book"
-      }
-    },
-  ]
+  const ultimasMovimentacoes: Movimentacao[] = await getUltimas()
 
   return (
     <main className="flex min-h-screen flex-col items-center gap-4">
@@ -100,6 +42,27 @@ export default function Home() {
 
       <section className="grid grid-flow-col-dense  gap-5">
         { totais.map( t => <CardStats {...t} /> ) }
+      </section>
+
+      <section className="flex gap-4">
+        <Card>
+          <CardHeader>
+            <BarChart />
+            <h2 className="text-lg ml-2">Gastos Por Categoria</h2>
+          </CardHeader>
+          <CardBody>
+            <BarChartCategorias />
+          </CardBody>
+        </Card>
+        <Card>
+          <CardHeader>
+            <Calendar />
+            <h2 className="text-lg ml-2">Gastos Por Mes</h2>
+          </CardHeader>
+          <CardBody>
+            <LineChartMovimentacoes />
+          </CardBody>
+        </Card>
       </section>
 
       <section>
